@@ -1,0 +1,2170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Wellness Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #e8ede8;
+            --bg-gradient-start: #dce5dc;
+            --bg-gradient-end: #e8ede8;
+            --bg-card: #ffffff;
+            --bg-input: #f0f3f0;
+            --text-primary: #2d2a26;
+            --text-secondary: #5a6058;
+            --text-muted: #8a918a;
+            --accent-warm: #a89078;
+            --accent-warm-light: #e8dfd6;
+            --accent-sage: #7a917a;
+            --accent-sage-light: #d4e0d4;
+            --accent-eucalyptus: #6b8b7a;
+            --accent-eucalyptus-light: #c8ddd0;
+            --accent-coral: #c4908a;
+            --accent-coral-light: #f0dfdc;
+            --accent-blue: #7a8a8f;
+            --accent-blue-light: #d8e2e4;
+            --border: #d0d8d0;
+            --shadow: 0 2px 8px rgba(45, 50, 45, 0.06);
+            --shadow-lg: 0 4px 20px rgba(45, 50, 45, 0.1);
+            --radius: 16px;
+            --radius-sm: 10px;
+            
+            /* Pain scale colours */
+            --pain-0: #6b8b7a;
+            --pain-1: #7a9a7a;
+            --pain-2: #8aa888;
+            --pain-3: #a0b890;
+            --pain-4: #b8c490;
+            --pain-5: #c8c080;
+            --pain-6: #d4a870;
+            --pain-7: #d49068;
+            --pain-8: #d47868;
+            --pain-9: #c86060;
+            --pain-10: #b04848;
+            
+            /* Trend colours */
+            --trend-up: #c86060;
+            --trend-down: #6b8b7a;
+            --trend-stable: #8a918a;
+        }
+
+        /* Dark mode - soft eucalyptus */
+        [data-theme="dark"] {
+            --bg-primary: #2d3a35;
+            --bg-gradient-start: #2d3a35;
+            --bg-gradient-end: #334039;
+            --bg-card: #3a4842;
+            --bg-input: #445550;
+            --text-primary: #e8f0ec;
+            --text-secondary: #c0ccc6;
+            --text-muted: #8a9a92;
+            --border: #506058;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 4px 20px rgba(0, 0, 0, 0.2);
+            
+            --accent-eucalyptus: #8fb0a0;
+            --accent-eucalyptus-light: rgba(143, 176, 160, 0.2);
+            --accent-sage: #98b8a0;
+            --accent-sage-light: rgba(152, 184, 160, 0.2);
+            --accent-warm: #c8b098;
+            --accent-warm-light: rgba(200, 176, 152, 0.2);
+            --accent-blue: #98aab0;
+            --accent-blue-light: rgba(152, 170, 176, 0.2);
+            --accent-coral: #d0a8a0;
+            --accent-coral-light: rgba(208, 168, 160, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, sans-serif;
+            background: linear-gradient(165deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 50%, var(--bg-primary) 100%);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            min-height: 100vh;
+            min-height: 100dvh;
+            padding-bottom: calc(80px + env(safe-area-inset-bottom, 16px));
+            transition: background 0.3s, color 0.3s;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Fraunces', Georgia, serif;
+            font-weight: 600;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-card);
+            padding: 16px 20px 14px;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: background 0.3s;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            color: var(--text-primary);
+        }
+
+        .streak-badge {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: var(--accent-eucalyptus-light);
+            color: var(--accent-eucalyptus);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-date {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle:active {
+            background: var(--bg-input);
+        }
+
+        .theme-toggle svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Navigation - fixed bottom bar */
+        .nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 16px;
+            padding-bottom: calc(10px + env(safe-area-inset-bottom, 16px));
+            z-index: 100;
+            transition: background 0.3s;
+        }
+
+        .nav-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 10px;
+            font-family: inherit;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s;
+        }
+
+        .nav-btn svg {
+            width: 22px;
+            height: 22px;
+            stroke-width: 1.5;
+        }
+
+        .nav-btn.active {
+            color: var(--accent-eucalyptus);
+        }
+
+        .nav-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Main content */
+        .main {
+            padding: 16px;
+        }
+
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Quick Log View */
+        .quick-log-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 16px;
+            transition: background 0.3s;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .quick-log-card h2 {
+            font-size: 17px;
+            color: var(--text-primary);
+        }
+
+        .repeat-btn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: var(--bg-input);
+            border: none;
+            color: var(--text-secondary);
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .repeat-btn:active {
+            transform: scale(0.95);
+        }
+
+        .repeat-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .repeat-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .metric-section {
+            margin-bottom: 22px;
+        }
+
+        .metric-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .metric-label svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Pain Scale */
+        .pain-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 6px;
+        }
+
+        .pain-btn {
+            aspect-ratio: 1;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg-card);
+            font-family: 'Fraunces', serif;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pain-btn[data-value="0"] { color: var(--pain-0); }
+        .pain-btn[data-value="1"] { color: var(--pain-1); }
+        .pain-btn[data-value="2"] { color: var(--pain-2); }
+        .pain-btn[data-value="3"] { color: var(--pain-3); }
+        .pain-btn[data-value="4"] { color: var(--pain-4); }
+        .pain-btn[data-value="5"] { color: var(--pain-5); }
+        .pain-btn[data-value="6"] { color: var(--pain-6); }
+        .pain-btn[data-value="7"] { color: var(--pain-7); }
+        .pain-btn[data-value="8"] { color: var(--pain-8); }
+        .pain-btn[data-value="9"] { color: var(--pain-9); }
+        .pain-btn[data-value="10"] { color: var(--pain-10); }
+
+        .pain-btn:active {
+            transform: scale(0.92);
+        }
+
+        .pain-btn.selected {
+            border-color: transparent;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .pain-btn[data-value="0"].selected { background: var(--pain-0); }
+        .pain-btn[data-value="1"].selected { background: var(--pain-1); }
+        .pain-btn[data-value="2"].selected { background: var(--pain-2); }
+        .pain-btn[data-value="3"].selected { background: var(--pain-3); }
+        .pain-btn[data-value="4"].selected { background: var(--pain-4); }
+        .pain-btn[data-value="5"].selected { background: var(--pain-5); }
+        .pain-btn[data-value="6"].selected { background: var(--pain-6); }
+        .pain-btn[data-value="7"].selected { background: var(--pain-7); }
+        .pain-btn[data-value="8"].selected { background: var(--pain-8); }
+        .pain-btn[data-value="9"].selected { background: var(--pain-9); }
+        .pain-btn[data-value="10"].selected { background: var(--pain-10); }
+
+        .pain-description {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-align: center;
+            padding: 8px 12px;
+            background: var(--bg-input);
+            border-radius: var(--radius-sm);
+            margin-top: 8px;
+            min-height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .pain-description.has-value {
+            background: var(--accent-eucalyptus-light);
+        }
+
+        /* Energy Scale */
+        .energy-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+        }
+
+        .energy-btn {
+            padding: 10px 6px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg-card);
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .energy-btn span {
+            font-size: 9px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .energy-btn:active {
+            transform: scale(0.92);
+        }
+
+        .energy-btn.selected {
+            border-color: var(--accent-warm);
+            background: var(--accent-warm-light);
+            transform: scale(1.02);
+        }
+
+        .energy-btn.selected span {
+            color: var(--text-secondary);
+        }
+
+        /* Mental Clarity Scale */
+        .mental-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+        }
+
+        .mental-btn {
+            padding: 10px 4px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg-card);
+            font-size: 10px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .mental-btn:active {
+            transform: scale(0.92);
+        }
+
+        .mental-btn.selected {
+            border-color: var(--accent-blue);
+            background: var(--accent-blue-light);
+            color: var(--text-primary);
+            transform: scale(1.02);
+        }
+
+        /* Mood Grid */
+        .mood-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+        }
+
+        .mood-btn {
+            padding: 10px 6px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg-card);
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .mood-btn:active {
+            transform: scale(0.92);
+        }
+
+        .mood-btn.selected {
+            border-color: var(--accent-eucalyptus);
+            background: var(--accent-eucalyptus-light);
+            color: var(--text-primary);
+            transform: scale(1.02);
+        }
+
+        /* Medication Toggles */
+        .med-section {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .med-toggle {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg-card);
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .med-toggle:active {
+            transform: scale(0.95);
+        }
+
+        .med-toggle.active {
+            border-color: var(--accent-sage);
+            background: var(--accent-sage-light);
+            color: var(--text-primary);
+        }
+
+        .med-toggle svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Notes Field */
+        .notes-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg-card);
+            font-family: inherit;
+            font-size: 13px;
+            color: var(--text-primary);
+            resize: none;
+            transition: border-color 0.2s;
+        }
+
+        .notes-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .notes-input:focus {
+            outline: none;
+            border-color: var(--accent-eucalyptus);
+        }
+
+        /* Save Button */
+        .save-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--accent-eucalyptus);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 20px;
+        }
+
+        .save-btn:active {
+            transform: scale(0.98);
+            background: #5a7a6a;
+        }
+
+        .save-btn:disabled {
+            background: var(--border);
+            color: var(--text-muted);
+        }
+
+        /* Today's Entries */
+        .today-section {
+            margin-top: 20px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .section-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .entry-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-sm);
+            padding: 12px 14px;
+            box-shadow: var(--shadow);
+            margin-bottom: 8px;
+            transition: background 0.3s;
+        }
+
+        .entry-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .entry-time {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .entry-metrics {
+            display: flex;
+            gap: 10px;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .entry-metric {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .entry-note {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid var(--border);
+            font-size: 12px;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            margin-left: 6px;
+            font-size: 12px;
+        }
+
+        /* Overview View */
+        .period-selector {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .period-btn {
+            padding: 6px 12px;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: var(--bg-card);
+            font-family: inherit;
+            font-size: 12px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .period-btn.active {
+            background: var(--accent-eucalyptus);
+            border-color: var(--accent-eucalyptus);
+            color: white;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-sm);
+            padding: 14px;
+            box-shadow: var(--shadow);
+            transition: background 0.3s;
+        }
+
+        .stat-card.full-width {
+            grid-column: span 2;
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-family: 'Fraunces', serif;
+            font-size: 26px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .stat-value.small {
+            font-size: 16px;
+        }
+
+        .stat-subtext {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .trend-indicator {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 8px;
+        }
+
+        .trend-indicator.up {
+            color: var(--trend-up);
+            background: rgba(200, 96, 96, 0.1);
+        }
+
+        .trend-indicator.down {
+            color: var(--trend-down);
+            background: rgba(107, 139, 122, 0.1);
+        }
+
+        .trend-indicator.stable {
+            color: var(--trend-stable);
+            background: rgba(138, 145, 138, 0.1);
+        }
+
+        /* Medication Correlation */
+        .correlation-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 16px;
+            box-shadow: var(--shadow);
+            margin-bottom: 16px;
+            transition: background 0.3s;
+        }
+
+        .correlation-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .correlation-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .correlation-row:last-child {
+            border-bottom: none;
+        }
+
+        .correlation-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .correlation-values {
+            display: flex;
+            gap: 16px;
+            font-size: 12px;
+        }
+
+        .correlation-value {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .correlation-value span:first-child {
+            font-family: 'Fraunces', serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .correlation-value span:last-child {
+            font-size: 9px;
+            color: var(--text-muted);
+        }
+
+        /* Weekly Summary */
+        .weekly-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 16px;
+            box-shadow: var(--shadow);
+            margin-bottom: 16px;
+            transition: background 0.3s;
+        }
+
+        .weekly-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .weekly-row {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 12px;
+        }
+
+        .weekly-row:last-child {
+            border-bottom: none;
+        }
+
+        .weekly-date {
+            width: 80px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .weekly-bars {
+            flex: 1;
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .weekly-bar {
+            height: 16px;
+            border-radius: 3px;
+            min-width: 2px;
+        }
+
+        .weekly-bar.pain { background: var(--accent-coral); }
+        .weekly-bar.energy { background: var(--accent-warm); }
+        .weekly-bar.mental { background: var(--accent-blue); }
+
+        .weekly-count {
+            width: 50px;
+            text-align: right;
+            color: var(--text-muted);
+            font-size: 11px;
+        }
+
+        /* Time Pattern Chart */
+        .chart-container {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 16px;
+            box-shadow: var(--shadow);
+            margin-bottom: 16px;
+            transition: background 0.3s;
+        }
+
+        .chart-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+        }
+
+        .time-chart {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .time-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .time-label {
+            width: 55px;
+            font-size: 10px;
+            color: var(--text-muted);
+            text-align: right;
+        }
+
+        .time-bar-container {
+            flex: 1;
+            height: 20px;
+            background: var(--bg-input);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .time-bar {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .time-bar.pain { background: linear-gradient(90deg, #7a9a7a, #c4908a); }
+        .time-bar.energy { background: linear-gradient(90deg, #d4e0d4, #a89078); }
+        .time-bar.mental { background: linear-gradient(90deg, #d8e2e4, #7a8a8f); }
+
+        .time-value {
+            position: absolute;
+            right: 6px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        /* Chart Legend */
+        .chart-legend {
+            display: flex;
+            gap: 14px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 2px;
+        }
+
+        .legend-dot.pain { background: var(--accent-coral); }
+        .legend-dot.energy { background: var(--accent-warm); }
+        .legend-dot.mental { background: var(--accent-blue); }
+
+        /* Export Button */
+        .export-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--bg-input);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .export-btn:active {
+            transform: scale(0.98);
+        }
+
+        .export-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* History View */
+        .history-day {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 14px;
+            box-shadow: var(--shadow);
+            margin-bottom: 10px;
+            transition: background 0.3s;
+        }
+
+        .history-date {
+            font-family: 'Fraunces', serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .history-entry {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 6px 0;
+            font-size: 12px;
+        }
+
+        .history-entry:not(:last-child) {
+            border-bottom: 1px solid var(--bg-input);
+        }
+
+        .history-entry-time {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .history-entry-data {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            color: var(--text-secondary);
+            justify-content: flex-end;
+        }
+
+        .history-entry-note {
+            width: 100%;
+            text-align: right;
+            font-style: italic;
+            color: var(--text-muted);
+            font-size: 11px;
+            margin-top: 4px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state svg {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 12px;
+            opacity: 0.5;
+        }
+
+        .empty-state p {
+            font-size: 13px;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--text-primary);
+            color: var(--bg-card);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 200;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <div class="header-left">
+                <h1>Wellness</h1>
+                <div class="streak-badge" id="streakBadge" style="display: none;">
+                    <span>🔥</span>
+                    <span id="streakCount">0</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <span id="currentTime" class="header-date"></span>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="5"/>
+                        <line x1="12" y1="1" x2="12" y2="3"/>
+                        <line x1="12" y1="21" x2="12" y2="23"/>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                        <line x1="1" y1="12" x2="3" y2="12"/>
+                        <line x1="21" y1="12" x2="23" y2="12"/>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                    </svg>
+                    <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="display: none;">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <!-- Quick Log View -->
+        <div id="logView" class="view active">
+            <div class="quick-log-card">
+                <div class="card-header">
+                    <h2>Quick Check-in</h2>
+                    <button class="repeat-btn" id="repeatBtn" disabled>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="17 1 21 5 17 9"/>
+                            <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+                            <polyline points="7 23 3 19 7 15"/>
+                            <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+                        </svg>
+                        Same as last
+                    </button>
+                </div>
+
+                <!-- Pain Scale -->
+                <div class="metric-section">
+                    <div class="metric-label">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                        Migraine Pain (0-10)
+                    </div>
+                    <div class="pain-grid" id="painGrid">
+                        <button class="pain-btn" data-value="0">0</button>
+                        <button class="pain-btn" data-value="1">1</button>
+                        <button class="pain-btn" data-value="2">2</button>
+                        <button class="pain-btn" data-value="3">3</button>
+                        <button class="pain-btn" data-value="4">4</button>
+                        <button class="pain-btn" data-value="5">5</button>
+                        <button class="pain-btn" data-value="6">6</button>
+                        <button class="pain-btn" data-value="7">7</button>
+                        <button class="pain-btn" data-value="8">8</button>
+                        <button class="pain-btn" data-value="9">9</button>
+                        <button class="pain-btn" data-value="10">10</button>
+                    </div>
+                    <div class="pain-description" id="painDescription">Select a level</div>
+                </div>
+
+                <!-- Energy Scale -->
+                <div class="metric-section">
+                    <div class="metric-label">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                        Energy Level
+                    </div>
+                    <div class="energy-grid" id="energyGrid">
+                        <button class="energy-btn" data-value="1">😴<span>Depleted</span></button>
+                        <button class="energy-btn" data-value="2">🪫<span>Low</span></button>
+                        <button class="energy-btn" data-value="3">⚡<span>Moderate</span></button>
+                        <button class="energy-btn" data-value="4">💪<span>Good</span></button>
+                        <button class="energy-btn" data-value="5">⚡⚡<span>Wired</span></button>
+                    </div>
+                </div>
+
+                <!-- Mental Clarity -->
+                <div class="metric-section">
+                    <div class="metric-label">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2a8 8 0 0 1 8 8c0 3-2 5.5-4 7l-1 4H9l-1-4c-2-1.5-4-4-4-7a8 8 0 0 1 8-8z"/><line x1="9" y1="21" x2="15" y2="21"/></svg>
+                        Thoughts Racing
+                    </div>
+                    <div class="mental-grid" id="mentalGrid">
+                        <button class="mental-btn" data-value="1">Calm & Clear</button>
+                        <button class="mental-btn" data-value="2">Mostly Focused</button>
+                        <button class="mental-btn" data-value="3">Some Racing</button>
+                        <button class="mental-btn" data-value="4">Racing Often</button>
+                        <button class="mental-btn" data-value="5">Can't Stop</button>
+                    </div>
+                </div>
+
+                <!-- Mood -->
+                <div class="metric-section">
+                    <div class="metric-label">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                        Mood
+                    </div>
+                    <div class="mood-grid" id="moodGrid">
+                        <button class="mood-btn" data-value="calm">Calm</button>
+                        <button class="mood-btn" data-value="content">Content</button>
+                        <button class="mood-btn" data-value="anxious">Anxious</button>
+                        <button class="mood-btn" data-value="irritable">Irritable</button>
+                        <button class="mood-btn" data-value="flat">Flat</button>
+                        <button class="mood-btn" data-value="overwhelmed">Overwhelmed</button>
+                    </div>
+                </div>
+
+                <!-- Medication Toggles -->
+                <div class="metric-section">
+                    <div class="metric-label">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10.5 20.5L3.5 13.5a4.95 4.95 0 1 1 7-7l7 7a4.95 4.95 0 1 1-7 7z"/><line x1="8.5" y1="8.5" x2="15.5" y2="15.5"/></svg>
+                        Medication (optional)
+                    </div>
+                    <div class="med-section" id="medSection">
+                        <button class="med-toggle" data-med="adhd-am">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
+                            ADHD AM
+                        </button>
+                        <button class="med-toggle" data-med="adhd-pm">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
+                            ADHD PM
+                        </button>
+                        <button class="med-toggle" data-med="migraine">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
+                            Migraine
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Notes -->
+                <div class="metric-section">
+                    <div class="metric-label">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        Notes (optional)
+                    </div>
+                    <textarea class="notes-input" id="notesInput" rows="2" placeholder="e.g., poor sleep, skipped lunch, stressful day..."></textarea>
+                </div>
+
+                <button class="save-btn" id="saveBtn" disabled>Log Check-in</button>
+            </div>
+
+            <!-- Today's Entries -->
+            <div class="today-section">
+                <div class="section-header">
+                    <span class="section-title">Today's Entries</span>
+                </div>
+                <div id="todayEntries"></div>
+            </div>
+        </div>
+
+        <!-- Overview View -->
+        <div id="overviewView" class="view">
+            <div class="period-selector" id="periodSelector">
+                <button class="period-btn active" data-days="7">7 days</button>
+                <button class="period-btn" data-days="14">2 weeks</button>
+                <button class="period-btn" data-days="30">1 month</button>
+                <button class="period-btn" data-days="90">3 months</button>
+                <button class="period-btn" data-days="180">6 months</button>
+                <button class="period-btn" data-days="365">1 year</button>
+            </div>
+
+            <div class="stats-grid" id="statsGrid">
+                <!-- Stats populated by JS -->
+            </div>
+
+            <div class="correlation-card" id="correlationCard">
+                <div class="correlation-title">💊 Medication Comparison</div>
+                <div id="correlationContent">
+                    <!-- Correlation data populated by JS -->
+                </div>
+            </div>
+
+            <div class="weekly-card" id="weeklyCard">
+                <div class="weekly-title">📅 Weekly Summary</div>
+                <div id="weeklyContent">
+                    <!-- Weekly data populated by JS -->
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">⏰ Patterns by Time of Day</div>
+                <div class="time-chart" id="timeChart">
+                    <!-- Chart populated by JS -->
+                </div>
+                <div class="chart-legend">
+                    <div class="legend-item"><div class="legend-dot pain"></div>Pain</div>
+                    <div class="legend-item"><div class="legend-dot energy"></div>Energy</div>
+                    <div class="legend-item"><div class="legend-dot mental"></div>Racing</div>
+                </div>
+            </div>
+
+            <button class="export-btn" id="exportBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                Export Data as CSV
+            </button>
+        </div>
+
+        <!-- History View -->
+        <div id="historyView" class="view">
+            <div id="historyList"></div>
+        </div>
+    </main>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <button class="nav-btn active" data-view="logView">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            Log
+        </button>
+        <button class="nav-btn" data-view="overviewView">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            Overview
+        </button>
+        <button class="nav-btn" data-view="historyView">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            History
+        </button>
+    </nav>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">Saved!</div>
+
+    <script>
+        // State
+        let currentEntry = { pain: null, energy: null, mental: null, mood: null, meds: [], notes: '' };
+        let selectedPeriod = 7;
+
+        // Pain descriptions
+        const painDescriptions = {
+            0: "No pain — feeling great",
+            1: "Barely noticeable, very minor",
+            2: "Minor pain, easily ignored",
+            3: "Noticeable but doesn't interfere",
+            4: "Moderate, can ignore with effort",
+            5: "Moderate, can't be ignored for long",
+            6: "Interferes with concentration",
+            7: "Dominates senses, affects daily activity",
+            8: "Intense, hard to do anything",
+            9: "Excruciating, unable to function",
+            10: "Worst pain imaginable, bed-ridden"
+        };
+
+        // Storage
+        function getData() {
+            const stored = localStorage.getItem('wellnessTrackerV3');
+            return stored ? JSON.parse(stored) : { entries: [] };
+        }
+
+        function saveData(data) {
+            localStorage.setItem('wellnessTrackerV3', JSON.stringify(data));
+        }
+
+        function getSettings() {
+            const stored = localStorage.getItem('wellnessSettings');
+            return stored ? JSON.parse(stored) : { theme: 'light' };
+        }
+
+        function saveSettings(settings) {
+            localStorage.setItem('wellnessSettings', JSON.stringify(settings));
+        }
+
+        // Theme
+        function initTheme() {
+            const settings = getSettings();
+            if (settings.theme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.querySelector('.sun-icon').style.display = 'none';
+                document.querySelector('.moon-icon').style.display = 'block';
+            }
+        }
+
+        function toggleTheme() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            if (isDark) {
+                document.documentElement.removeAttribute('data-theme');
+                document.querySelector('.sun-icon').style.display = 'block';
+                document.querySelector('.moon-icon').style.display = 'none';
+                saveSettings({ theme: 'light' });
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.querySelector('.sun-icon').style.display = 'none';
+                document.querySelector('.moon-icon').style.display = 'block';
+                saveSettings({ theme: 'dark' });
+            }
+        }
+
+        // Utilities
+        function formatDate(date) {
+            return new Date(date).toLocaleDateString('en-AU', { 
+                weekday: 'short', 
+                day: 'numeric', 
+                month: 'short' 
+            });
+        }
+
+        function formatTime(date) {
+            return new Date(date).toLocaleTimeString('en-AU', { 
+                hour: 'numeric', 
+                minute: '2-digit',
+                hour12: true 
+            });
+        }
+
+        function getTimeSlot(date) {
+            const hour = new Date(date).getHours();
+            if (hour < 9) return 'Early AM';
+            if (hour < 12) return 'Morning';
+            if (hour < 15) return 'Early PM';
+            if (hour < 18) return 'Afternoon';
+            if (hour < 21) return 'Evening';
+            return 'Night';
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        function updateHeaderTime() {
+            const now = new Date();
+            document.getElementById('currentTime').textContent = formatDate(now);
+        }
+
+        // Streak calculation
+        function calculateStreak() {
+            const data = getData();
+            if (data.entries.length === 0) return 0;
+
+            const dates = [...new Set(data.entries.map(e => new Date(e.timestamp).toDateString()))];
+            dates.sort((a, b) => new Date(b) - new Date(a));
+
+            let streak = 0;
+            let checkDate = new Date();
+            checkDate.setHours(0, 0, 0, 0);
+
+            // Check if logged today
+            const today = new Date().toDateString();
+            const hasToday = dates.includes(today);
+            
+            if (!hasToday) {
+                // Check yesterday
+                checkDate.setDate(checkDate.getDate() - 1);
+            }
+
+            for (let i = 0; i < 365; i++) {
+                const dateStr = checkDate.toDateString();
+                if (dates.includes(dateStr)) {
+                    streak++;
+                    checkDate.setDate(checkDate.getDate() - 1);
+                } else {
+                    break;
+                }
+            }
+
+            return streak;
+        }
+
+        function updateStreak() {
+            const streak = calculateStreak();
+            const badge = document.getElementById('streakBadge');
+            const count = document.getElementById('streakCount');
+            
+            if (streak > 0) {
+                badge.style.display = 'flex';
+                count.textContent = streak + ' day' + (streak > 1 ? 's' : '');
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        // Last entry for repeat function
+        function getLastEntry() {
+            const data = getData();
+            if (data.entries.length === 0) return null;
+            return data.entries[data.entries.length - 1];
+        }
+
+        function updateRepeatButton() {
+            const lastEntry = getLastEntry();
+            const btn = document.getElementById('repeatBtn');
+            btn.disabled = !lastEntry;
+        }
+
+        function repeatLastEntry() {
+            const lastEntry = getLastEntry();
+            if (!lastEntry) return;
+
+            // Set pain
+            if (lastEntry.pain !== null) {
+                document.querySelectorAll('.pain-btn').forEach(b => b.classList.remove('selected'));
+                const painBtn = document.querySelector(`.pain-btn[data-value="${lastEntry.pain}"]`);
+                if (painBtn) {
+                    painBtn.classList.add('selected');
+                    currentEntry.pain = lastEntry.pain;
+                    const descEl = document.getElementById('painDescription');
+                    descEl.textContent = painDescriptions[lastEntry.pain];
+                    descEl.classList.add('has-value');
+                }
+            }
+
+            // Set energy
+            if (lastEntry.energy !== null) {
+                document.querySelectorAll('.energy-btn').forEach(b => b.classList.remove('selected'));
+                const energyBtn = document.querySelector(`.energy-btn[data-value="${lastEntry.energy}"]`);
+                if (energyBtn) {
+                    energyBtn.classList.add('selected');
+                    currentEntry.energy = lastEntry.energy;
+                }
+            }
+
+            // Set mental
+            if (lastEntry.mental !== null) {
+                document.querySelectorAll('.mental-btn').forEach(b => b.classList.remove('selected'));
+                const mentalBtn = document.querySelector(`.mental-btn[data-value="${lastEntry.mental}"]`);
+                if (mentalBtn) {
+                    mentalBtn.classList.add('selected');
+                    currentEntry.mental = lastEntry.mental;
+                }
+            }
+
+            // Set mood
+            if (lastEntry.mood) {
+                document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+                const moodBtn = document.querySelector(`.mood-btn[data-value="${lastEntry.mood}"]`);
+                if (moodBtn) {
+                    moodBtn.classList.add('selected');
+                    currentEntry.mood = lastEntry.mood;
+                }
+            }
+
+            // Don't repeat meds or notes - those are time-specific
+
+            updateSaveButton();
+            showToast('Copied from last entry');
+        }
+
+        // Selection handlers
+        function setupSelections() {
+            // Pain
+            document.querySelectorAll('.pain-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.pain-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    currentEntry.pain = parseInt(btn.dataset.value);
+                    
+                    const descEl = document.getElementById('painDescription');
+                    descEl.textContent = painDescriptions[currentEntry.pain];
+                    descEl.classList.add('has-value');
+                    
+                    updateSaveButton();
+                });
+            });
+
+            // Energy
+            document.querySelectorAll('.energy-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.energy-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    currentEntry.energy = parseInt(btn.dataset.value);
+                    updateSaveButton();
+                });
+            });
+
+            // Mental
+            document.querySelectorAll('.mental-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.mental-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    currentEntry.mental = parseInt(btn.dataset.value);
+                    updateSaveButton();
+                });
+            });
+
+            // Mood
+            document.querySelectorAll('.mood-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    currentEntry.mood = btn.dataset.value;
+                    updateSaveButton();
+                });
+            });
+
+            // Meds
+            document.querySelectorAll('.med-toggle').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    btn.classList.toggle('active');
+                    const med = btn.dataset.med;
+                    if (currentEntry.meds.includes(med)) {
+                        currentEntry.meds = currentEntry.meds.filter(m => m !== med);
+                    } else {
+                        currentEntry.meds.push(med);
+                    }
+                });
+            });
+
+            // Notes
+            document.getElementById('notesInput').addEventListener('input', (e) => {
+                currentEntry.notes = e.target.value.trim();
+            });
+
+            // Repeat button
+            document.getElementById('repeatBtn').addEventListener('click', repeatLastEntry);
+
+            // Theme toggle
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+            // Export
+            document.getElementById('exportBtn').addEventListener('click', exportData);
+        }
+
+        function updateSaveButton() {
+            const btn = document.getElementById('saveBtn');
+            const hasData = currentEntry.pain !== null || 
+                           currentEntry.energy !== null || 
+                           currentEntry.mental !== null || 
+                           currentEntry.mood !== null;
+            btn.disabled = !hasData;
+        }
+
+        function resetForm() {
+            currentEntry = { pain: null, energy: null, mental: null, mood: null, meds: [], notes: '' };
+            document.querySelectorAll('.pain-btn, .energy-btn, .mental-btn, .mood-btn').forEach(b => b.classList.remove('selected'));
+            document.querySelectorAll('.med-toggle').forEach(b => b.classList.remove('active'));
+            document.getElementById('notesInput').value = '';
+            
+            const descEl = document.getElementById('painDescription');
+            descEl.textContent = 'Select a level';
+            descEl.classList.remove('has-value');
+            
+            updateSaveButton();
+        }
+
+        function saveEntry() {
+            const data = getData();
+            const entry = {
+                ...currentEntry,
+                timestamp: new Date().toISOString()
+            };
+            data.entries.push(entry);
+            saveData(data);
+            showToast('Check-in saved!');
+            resetForm();
+            renderTodayEntries();
+            updateStreak();
+            updateRepeatButton();
+        }
+
+        // Render today's entries
+        function renderTodayEntries() {
+            const data = getData();
+            const today = new Date().toDateString();
+            const todayEntries = data.entries.filter(e => 
+                new Date(e.timestamp).toDateString() === today
+            ).reverse();
+
+            const container = document.getElementById('todayEntries');
+            
+            if (todayEntries.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                        <p>No entries yet today</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = todayEntries.map((entry, idx) => {
+                const actualIndex = data.entries.length - 1 - idx;
+                return `
+                    <div class="entry-card">
+                        <div class="entry-top">
+                            <div class="entry-time">${formatTime(entry.timestamp)}</div>
+                            <div class="entry-metrics">
+                                ${entry.pain !== null ? `<span class="entry-metric">🤕 ${entry.pain}</span>` : ''}
+                                ${entry.energy !== null ? `<span class="entry-metric">⚡ ${entry.energy}</span>` : ''}
+                                ${entry.mental !== null ? `<span class="entry-metric">🧠 ${entry.mental}</span>` : ''}
+                                ${entry.mood ? `<span class="entry-metric">${entry.mood}</span>` : ''}
+                                ${entry.meds && entry.meds.length > 0 ? `<span class="entry-metric">💊</span>` : ''}
+                                <button class="delete-btn" onclick="deleteEntry(${actualIndex})">✕</button>
+                            </div>
+                        </div>
+                        ${entry.notes ? `<div class="entry-note">"${entry.notes}"</div>` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function deleteEntry(index) {
+            const data = getData();
+            data.entries.splice(index, 1);
+            saveData(data);
+            renderTodayEntries();
+            updateStreak();
+            showToast('Entry deleted');
+        }
+
+        // Calculate trend
+        function calculateTrend(entries, field, period) {
+            const halfPeriod = Math.floor(period / 2);
+            const cutoffRecent = new Date();
+            cutoffRecent.setDate(cutoffRecent.getDate() - halfPeriod);
+            const cutoffOlder = new Date();
+            cutoffOlder.setDate(cutoffOlder.getDate() - period);
+
+            const recentEntries = entries.filter(e => new Date(e.timestamp) >= cutoffRecent && e[field] !== null);
+            const olderEntries = entries.filter(e => {
+                const date = new Date(e.timestamp);
+                return date >= cutoffOlder && date < cutoffRecent && e[field] !== null;
+            });
+
+            if (recentEntries.length < 2 || olderEntries.length < 2) return null;
+
+            const recentAvg = recentEntries.reduce((s, e) => s + e[field], 0) / recentEntries.length;
+            const olderAvg = olderEntries.reduce((s, e) => s + e[field], 0) / olderEntries.length;
+
+            const diff = recentAvg - olderAvg;
+            const threshold = 0.3;
+
+            if (diff > threshold) return 'up';
+            if (diff < -threshold) return 'down';
+            return 'stable';
+        }
+
+        function getTrendHTML(trend, inverse = false) {
+            if (!trend) return '';
+            
+            // For pain and mental, "down" is good. For energy, "up" is good.
+            let className = trend;
+            if (inverse) {
+                if (trend === 'up') className = 'down';
+                else if (trend === 'down') className = 'up';
+            }
+
+            const arrows = { up: '↑', down: '↓', stable: '→' };
+            return `<span class="trend-indicator ${className}">${arrows[trend]}</span>`;
+        }
+
+        // Overview stats
+        function renderOverview() {
+            const data = getData();
+            const cutoff = new Date();
+            cutoff.setDate(cutoff.getDate() - selectedPeriod);
+            
+            const periodEntries = data.entries.filter(e => new Date(e.timestamp) >= cutoff);
+            
+            if (periodEntries.length === 0) {
+                document.getElementById('statsGrid').innerHTML = `
+                    <div class="stat-card full-width">
+                        <div class="stat-label">No data for this period</div>
+                        <div class="stat-value small">Start logging to see insights</div>
+                    </div>
+                `;
+                document.getElementById('correlationContent').innerHTML = '<p style="color: var(--text-muted); font-size: 12px;">Not enough data yet</p>';
+                document.getElementById('weeklyContent').innerHTML = '<p style="color: var(--text-muted); font-size: 12px;">Not enough data yet</p>';
+                document.getElementById('timeChart').innerHTML = '';
+                return;
+            }
+
+            // Calculate averages
+            const painEntries = periodEntries.filter(e => e.pain !== null);
+            const energyEntries = periodEntries.filter(e => e.energy !== null);
+            const mentalEntries = periodEntries.filter(e => e.mental !== null);
+            const moodEntries = periodEntries.filter(e => e.mood !== null);
+
+            const avgPain = painEntries.length > 0 
+                ? (painEntries.reduce((s, e) => s + e.pain, 0) / painEntries.length).toFixed(1) 
+                : '—';
+            const avgEnergy = energyEntries.length > 0 
+                ? (energyEntries.reduce((s, e) => s + e.energy, 0) / energyEntries.length).toFixed(1) 
+                : '—';
+            const avgMental = mentalEntries.length > 0 
+                ? (mentalEntries.reduce((s, e) => s + e.mental, 0) / mentalEntries.length).toFixed(1) 
+                : '—';
+
+            // Trends
+            const painTrend = calculateTrend(data.entries, 'pain', selectedPeriod);
+            const energyTrend = calculateTrend(data.entries, 'energy', selectedPeriod);
+            const mentalTrend = calculateTrend(data.entries, 'mental', selectedPeriod);
+
+            // Most common mood
+            const moodCounts = {};
+            moodEntries.forEach(e => {
+                moodCounts[e.mood] = (moodCounts[e.mood] || 0) + 1;
+            });
+            const topMood = Object.entries(moodCounts).sort((a, b) => b[1] - a[1])[0];
+
+            // Count migraine days
+            const migraineDays = new Set(
+                painEntries.filter(e => e.pain >= 4).map(e => new Date(e.timestamp).toDateString())
+            ).size;
+
+            document.getElementById('statsGrid').innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div>
+                            <div class="stat-label">Avg Pain</div>
+                            <div class="stat-value">${avgPain}</div>
+                            <div class="stat-subtext">${painEntries.length} entries</div>
+                        </div>
+                        ${getTrendHTML(painTrend)}
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div>
+                            <div class="stat-label">Migraine Days</div>
+                            <div class="stat-value">${migraineDays}</div>
+                            <div class="stat-subtext">pain ≥ 4</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div>
+                            <div class="stat-label">Avg Energy</div>
+                            <div class="stat-value">${avgEnergy}</div>
+                            <div class="stat-subtext">${energyEntries.length} entries</div>
+                        </div>
+                        ${getTrendHTML(energyTrend, true)}
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div>
+                            <div class="stat-label">Avg Racing</div>
+                            <div class="stat-value">${avgMental}</div>
+                            <div class="stat-subtext">${mentalEntries.length} entries</div>
+                        </div>
+                        ${getTrendHTML(mentalTrend)}
+                    </div>
+                </div>
+                <div class="stat-card full-width">
+                    <div class="stat-label">Most Common Mood</div>
+                    <div class="stat-value small">${topMood ? topMood[0].charAt(0).toUpperCase() + topMood[0].slice(1) : '—'}</div>
+                    <div class="stat-subtext">${topMood ? `${topMood[1]} times (${Math.round(topMood[1]/moodEntries.length*100)}%)` : 'No mood data'}</div>
+                </div>
+                <div class="stat-card full-width">
+                    <div class="stat-label">Total Check-ins</div>
+                    <div class="stat-value">${periodEntries.length}</div>
+                    <div class="stat-subtext">in last ${selectedPeriod} days</div>
+                </div>
+            `;
+
+            renderCorrelation(periodEntries);
+            renderWeeklySummary(data.entries);
+            renderTimeChart(periodEntries);
+        }
+
+        // Medication correlation
+        function renderCorrelation(entries) {
+            const container = document.getElementById('correlationContent');
+            
+            const withADHD = entries.filter(e => e.meds && (e.meds.includes('adhd-am') || e.meds.includes('adhd-pm')));
+            const withoutADHD = entries.filter(e => !e.meds || (!e.meds.includes('adhd-am') && !e.meds.includes('adhd-pm')));
+
+            if (withADHD.length < 3 || withoutADHD.length < 3) {
+                container.innerHTML = '<p style="color: var(--text-muted); font-size: 12px;">Need more entries with/without meds to compare</p>';
+                return;
+            }
+
+            function avg(arr, field) {
+                const valid = arr.filter(e => e[field] !== null);
+                if (valid.length === 0) return '—';
+                return (valid.reduce((s, e) => s + e[field], 0) / valid.length).toFixed(1);
+            }
+
+            container.innerHTML = `
+                <div class="correlation-row">
+                    <div class="correlation-label">Pain</div>
+                    <div class="correlation-values">
+                        <div class="correlation-value">
+                            <span>${avg(withADHD, 'pain')}</span>
+                            <span>with ADHD meds</span>
+                        </div>
+                        <div class="correlation-value">
+                            <span>${avg(withoutADHD, 'pain')}</span>
+                            <span>without</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="correlation-row">
+                    <div class="correlation-label">Energy</div>
+                    <div class="correlation-values">
+                        <div class="correlation-value">
+                            <span>${avg(withADHD, 'energy')}</span>
+                            <span>with ADHD meds</span>
+                        </div>
+                        <div class="correlation-value">
+                            <span>${avg(withoutADHD, 'energy')}</span>
+                            <span>without</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="correlation-row">
+                    <div class="correlation-label">Racing Thoughts</div>
+                    <div class="correlation-values">
+                        <div class="correlation-value">
+                            <span>${avg(withADHD, 'mental')}</span>
+                            <span>with ADHD meds</span>
+                        </div>
+                        <div class="correlation-value">
+                            <span>${avg(withoutADHD, 'mental')}</span>
+                            <span>without</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Weekly summary
+        function renderWeeklySummary(allEntries) {
+            const container = document.getElementById('weeklyContent');
+            const weeks = [];
+            
+            // Get last 8 weeks
+            for (let i = 0; i < 8; i++) {
+                const weekEnd = new Date();
+                weekEnd.setDate(weekEnd.getDate() - (i * 7));
+                const weekStart = new Date(weekEnd);
+                weekStart.setDate(weekStart.getDate() - 6);
+                
+                const weekEntries = allEntries.filter(e => {
+                    const date = new Date(e.timestamp);
+                    return date >= weekStart && date <= weekEnd;
+                });
+
+                if (weekEntries.length > 0) {
+                    const painAvg = weekEntries.filter(e => e.pain !== null).length > 0
+                        ? weekEntries.filter(e => e.pain !== null).reduce((s, e) => s + e.pain, 0) / weekEntries.filter(e => e.pain !== null).length
+                        : 0;
+                    const energyAvg = weekEntries.filter(e => e.energy !== null).length > 0
+                        ? weekEntries.filter(e => e.energy !== null).reduce((s, e) => s + e.energy, 0) / weekEntries.filter(e => e.energy !== null).length
+                        : 0;
+                    const mentalAvg = weekEntries.filter(e => e.mental !== null).length > 0
+                        ? weekEntries.filter(e => e.mental !== null).reduce((s, e) => s + e.mental, 0) / weekEntries.filter(e => e.mental !== null).length
+                        : 0;
+
+                    weeks.push({
+                        label: `${weekStart.getDate()}/${weekStart.getMonth() + 1}`,
+                        pain: painAvg,
+                        energy: energyAvg,
+                        mental: mentalAvg,
+                        count: weekEntries.length
+                    });
+                }
+            }
+
+            if (weeks.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted); font-size: 12px;">Not enough data yet</p>';
+                return;
+            }
+
+            container.innerHTML = weeks.slice(0, 6).map(week => `
+                <div class="weekly-row">
+                    <div class="weekly-date">${week.label}</div>
+                    <div class="weekly-bars">
+                        <div class="weekly-bar pain" style="width: ${week.pain * 8}px" title="Pain: ${week.pain.toFixed(1)}"></div>
+                        <div class="weekly-bar energy" style="width: ${week.energy * 15}px" title="Energy: ${week.energy.toFixed(1)}"></div>
+                        <div class="weekly-bar mental" style="width: ${week.mental * 15}px" title="Mental: ${week.mental.toFixed(1)}"></div>
+                    </div>
+                    <div class="weekly-count">${week.count} logs</div>
+                </div>
+            `).join('');
+        }
+
+        function renderTimeChart(entries) {
+            const timeSlots = ['Early AM', 'Morning', 'Early PM', 'Afternoon', 'Evening', 'Night'];
+            const slotData = {};
+
+            timeSlots.forEach(slot => {
+                slotData[slot] = { pain: [], energy: [], mental: [] };
+            });
+
+            entries.forEach(entry => {
+                const slot = getTimeSlot(entry.timestamp);
+                if (entry.pain !== null) slotData[slot].pain.push(entry.pain);
+                if (entry.energy !== null) slotData[slot].energy.push(entry.energy);
+                if (entry.mental !== null) slotData[slot].mental.push(entry.mental);
+            });
+
+            const chartHTML = timeSlots.map(slot => {
+                const data = slotData[slot];
+                const avgPain = data.pain.length > 0 
+                    ? (data.pain.reduce((a, b) => a + b, 0) / data.pain.length) 
+                    : 0;
+                const avgEnergy = data.energy.length > 0 
+                    ? (data.energy.reduce((a, b) => a + b, 0) / data.energy.length) 
+                    : 0;
+                const avgMental = data.mental.length > 0 
+                    ? (data.mental.reduce((a, b) => a + b, 0) / data.mental.length) 
+                    : 0;
+
+                const hasData = data.pain.length > 0 || data.energy.length > 0 || data.mental.length > 0;
+
+                if (!hasData) return '';
+
+                return `
+                    <div class="time-row">
+                        <div class="time-label">${slot}</div>
+                        <div class="time-bar-container">
+                            <div class="time-bar pain" style="width: ${avgPain * 10}%"></div>
+                            <span class="time-value">${avgPain.toFixed(1)}</span>
+                        </div>
+                    </div>
+                    <div class="time-row">
+                        <div class="time-label"></div>
+                        <div class="time-bar-container">
+                            <div class="time-bar energy" style="width: ${avgEnergy * 20}%"></div>
+                            <span class="time-value">${avgEnergy.toFixed(1)}</span>
+                        </div>
+                    </div>
+                    <div class="time-row" style="margin-bottom: 10px">
+                        <div class="time-label"></div>
+                        <div class="time-bar-container">
+                            <div class="time-bar mental" style="width: ${avgMental * 20}%"></div>
+                            <span class="time-value">${avgMental.toFixed(1)}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('timeChart').innerHTML = chartHTML || '<p style="color: var(--text-muted); font-size: 12px;">Not enough data for time patterns yet</p>';
+        }
+
+        // Export
+        function exportData() {
+            const data = getData();
+            if (data.entries.length === 0) {
+                showToast('No data to export');
+                return;
+            }
+
+            const headers = ['Date', 'Time', 'Pain', 'Energy', 'Mental', 'Mood', 'ADHD AM', 'ADHD PM', 'Migraine Med', 'Notes'];
+            const rows = data.entries.map(entry => {
+                const date = new Date(entry.timestamp);
+                return [
+                    date.toLocaleDateString('en-AU'),
+                    date.toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit' }),
+                    entry.pain !== null ? entry.pain : '',
+                    entry.energy !== null ? entry.energy : '',
+                    entry.mental !== null ? entry.mental : '',
+                    entry.mood || '',
+                    entry.meds && entry.meds.includes('adhd-am') ? 'Yes' : '',
+                    entry.meds && entry.meds.includes('adhd-pm') ? 'Yes' : '',
+                    entry.meds && entry.meds.includes('migraine') ? 'Yes' : '',
+                    entry.notes ? `"${entry.notes.replace(/"/g, '""')}"` : ''
+                ].join(',');
+            });
+
+            const csv = [headers.join(','), ...rows].join('\n');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `wellness-data-${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast('Data exported!');
+        }
+
+        // History
+        function renderHistory() {
+            const data = getData();
+            
+            if (data.entries.length === 0) {
+                document.getElementById('historyList').innerHTML = `
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <p>No history yet</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Group by date
+            const byDate = {};
+            data.entries.forEach(entry => {
+                const date = new Date(entry.timestamp).toDateString();
+                if (!byDate[date]) byDate[date] = [];
+                byDate[date].push(entry);
+            });
+
+            // Sort dates descending
+            const sortedDates = Object.keys(byDate).sort((a, b) => new Date(b) - new Date(a));
+
+            document.getElementById('historyList').innerHTML = sortedDates.map(date => {
+                const entries = byDate[date].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+                return `
+                    <div class="history-day">
+                        <div class="history-date">${formatDate(date)}</div>
+                        ${entries.map(entry => `
+                            <div class="history-entry">
+                                <span class="history-entry-time">${formatTime(entry.timestamp)}</span>
+                                <span class="history-entry-data">
+                                    ${entry.pain !== null ? `<span>🤕 ${entry.pain}</span>` : ''}
+                                    ${entry.energy !== null ? `<span>⚡ ${entry.energy}</span>` : ''}
+                                    ${entry.mental !== null ? `<span>🧠 ${entry.mental}</span>` : ''}
+                                    ${entry.mood ? `<span>${entry.mood}</span>` : ''}
+                                    ${entry.meds && entry.meds.length > 0 ? `<span>💊</span>` : ''}
+                                    ${entry.notes ? `<span class="history-entry-note">"${entry.notes}"</span>` : ''}
+                                </span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Navigation
+        function setupNavigation() {
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const viewId = btn.dataset.view;
+                    
+                    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+                    document.getElementById(viewId).classList.add('active');
+
+                    if (viewId === 'overviewView') renderOverview();
+                    if (viewId === 'historyView') renderHistory();
+                });
+            });
+
+            // Period selector
+            document.querySelectorAll('.period-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    selectedPeriod = parseInt(btn.dataset.days);
+                    renderOverview();
+                });
+            });
+        }
+
+        // Initialize
+        function init() {
+            initTheme();
+            updateHeaderTime();
+            setInterval(updateHeaderTime, 60000);
+            
+            setupSelections();
+            setupNavigation();
+            renderTodayEntries();
+            updateStreak();
+            updateRepeatButton();
+
+            document.getElementById('saveBtn').addEventListener('click', saveEntry);
+        }
+
+        init();
+    </script>
+</body>
+</html>
