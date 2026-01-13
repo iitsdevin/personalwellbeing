@@ -52,19 +52,30 @@
             --trend-stable: #8a918a;
         }
 
-        /* Dark mode */
+        /* Dark mode - soft eucalyptus */
         [data-theme="dark"] {
-            --bg-primary: #1a1f1a;
-            --bg-gradient-start: #1a1f1a;
-            --bg-gradient-end: #222822;
-            --bg-card: #2a302a;
-            --bg-input: #353b35;
-            --text-primary: #e8ede8;
-            --text-secondary: #b0b8b0;
-            --text-muted: #707870;
-            --border: #404840;
-            --shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-            --shadow-lg: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --bg-primary: #2d3a35;
+            --bg-gradient-start: #2d3a35;
+            --bg-gradient-end: #334039;
+            --bg-card: #3a4842;
+            --bg-input: #445550;
+            --text-primary: #e8f0ec;
+            --text-secondary: #c0ccc6;
+            --text-muted: #8a9a92;
+            --border: #506058;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 4px 20px rgba(0, 0, 0, 0.2);
+            
+            --accent-eucalyptus: #8fb0a0;
+            --accent-eucalyptus-light: rgba(143, 176, 160, 0.2);
+            --accent-sage: #98b8a0;
+            --accent-sage-light: rgba(152, 184, 160, 0.2);
+            --accent-warm: #c8b098;
+            --accent-warm-light: rgba(200, 176, 152, 0.2);
+            --accent-blue: #98aab0;
+            --accent-blue-light: rgba(152, 170, 176, 0.2);
+            --accent-coral: #d0a8a0;
+            --accent-coral-light: rgba(208, 168, 160, 0.2);
         }
 
         * {
@@ -81,7 +92,7 @@
             color: var(--text-primary);
             min-height: 100vh;
             min-height: 100dvh;
-            padding-bottom: 90px;
+            padding-bottom: calc(80px + env(safe-area-inset-bottom, 16px));
             transition: background 0.3s, color 0.3s;
         }
 
@@ -130,10 +141,6 @@
             font-weight: 600;
         }
 
-        [data-theme="dark"] .streak-badge {
-            background: rgba(107, 139, 122, 0.2);
-        }
-
         .header-right {
             display: flex;
             align-items: center;
@@ -166,7 +173,7 @@
             height: 20px;
         }
 
-        /* Navigation */
+        /* Navigation - fixed bottom bar */
         .nav {
             position: fixed;
             bottom: 0;
@@ -176,7 +183,8 @@
             border-top: 1px solid var(--border);
             display: flex;
             justify-content: space-around;
-            padding: 10px 16px 26px;
+            padding: 10px 16px;
+            padding-bottom: calc(10px + env(safe-area-inset-bottom, 16px));
             z-index: 100;
             transition: background 0.3s;
         }
@@ -380,10 +388,6 @@
             background: var(--accent-eucalyptus-light);
         }
 
-        [data-theme="dark"] .pain-description.has-value {
-            background: rgba(107, 139, 122, 0.2);
-        }
-
         /* Energy Scale */
         .energy-grid {
             display: grid;
@@ -419,10 +423,6 @@
             border-color: var(--accent-warm);
             background: var(--accent-warm-light);
             transform: scale(1.02);
-        }
-
-        [data-theme="dark"] .energy-btn.selected {
-            background: rgba(168, 144, 120, 0.2);
         }
 
         .energy-btn.selected span {
@@ -461,10 +461,6 @@
             transform: scale(1.02);
         }
 
-        [data-theme="dark"] .mental-btn.selected {
-            background: rgba(122, 138, 143, 0.2);
-        }
-
         /* Mood Grid */
         .mood-grid {
             display: grid;
@@ -493,10 +489,6 @@
             background: var(--accent-eucalyptus-light);
             color: var(--text-primary);
             transform: scale(1.02);
-        }
-
-        [data-theme="dark"] .mood-btn.selected {
-            background: rgba(107, 139, 122, 0.2);
         }
 
         /* Medication Toggles */
@@ -529,10 +521,6 @@
             border-color: var(--accent-sage);
             background: var(--accent-sage-light);
             color: var(--text-primary);
-        }
-
-        [data-theme="dark"] .med-toggle.active {
-            background: rgba(122, 145, 122, 0.2);
         }
 
         .med-toggle svg {
