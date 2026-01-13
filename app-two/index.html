@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Wellness Tracker</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -92,7 +92,7 @@
             color: var(--text-primary);
             min-height: 100vh;
             min-height: 100dvh;
-            padding-bottom: calc(80px + env(safe-area-inset-bottom, 16px));
+            padding-bottom: 20px;
             transition: background 0.3s, color 0.3s;
         }
 
@@ -173,20 +173,19 @@
             height: 20px;
         }
 
-        /* Navigation - fixed bottom bar */
+        /* Navigation - top bar below header */
         .nav {
-            position: fixed;
-            bottom: 0;
+            position: sticky;
+            top: 52px;
             left: 0;
             right: 0;
-            background: var(--bg-card);
-            border-top: 1px solid var(--border);
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-around;
-            padding: 10px 16px;
-            padding-bottom: calc(10px + env(safe-area-inset-bottom, 16px));
-            z-index: 100;
-            transition: background 0.3s;
+            padding: 8px 16px;
+            z-index: 99;
+            transition: background-color 0.3s;
         }
 
         .nav-btn {
@@ -1057,7 +1056,7 @@
         /* Toast */
         .toast {
             position: fixed;
-            bottom: 100px;
+            bottom: 40px;
             left: 50%;
             transform: translateX(-50%) translateY(100px);
             background: var(--text-primary);
@@ -1122,6 +1121,22 @@
             </div>
         </div>
     </header>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <button class="nav-btn active" data-view="logView">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            Log
+        </button>
+        <button class="nav-btn" data-view="overviewView">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            Overview
+        </button>
+        <button class="nav-btn" data-view="historyView">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            History
+        </button>
+    </nav>
 
     <main class="main">
         <!-- Quick Log View -->
@@ -1307,22 +1322,6 @@
             <div id="historyList"></div>
         </div>
     </main>
-
-    <!-- Navigation -->
-    <nav class="nav">
-        <button class="nav-btn active" data-view="logView">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-            Log
-        </button>
-        <button class="nav-btn" data-view="overviewView">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-            Overview
-        </button>
-        <button class="nav-btn" data-view="historyView">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            History
-        </button>
-    </nav>
 
     <!-- Toast -->
     <div class="toast" id="toast">Saved!</div>
